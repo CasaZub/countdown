@@ -62,6 +62,12 @@
       font-size: 14px;
       margin-top: 6px;
     }
+
+    .note {
+      opacity: 0.75;
+      font-size: 13px;
+      margin-top: 6px;
+    }
   </style>
 </head>
 
@@ -90,28 +96,33 @@
         <div class="lbl">secunde</div>
       </div>
     </section>
+
+    <div id="status" class="note"></div>
   </main>
 
   <script>
-    // Countdown persistent de la 1000 zile (se salvează în browser).
-    // 1 zi = 24*60*60 = 86400 secunde
-    // 1000 zile = 1000*86400 = 86,400,000 secunde
-    const totalStartSeconds = 1000 * 24 * 60 * 60;
+    // ===================== SETĂRI (TU MODIFICI AICI) =====================
+    // Countdown de la 1000 zile:
+    const totalStartSeconds = 1000 * 24 * 60 * 60; // 86,400,000 secunde
 
-    // Cheie unică pentru site-ul tău:
-    const KEY = "countdown_start_epoch_ms_v1";
+    // Data/oră de START a countdown-ului (ora locală):
+    // Format: YYYY-MM-DDTHH:MM:SS
+    const START_ISO_LOCAL = "2026-02-20T12:00:00";
+    // ====================================================================
 
-    // Dacă nu există un start salvat, îl setăm acum:
-    let startEpochMs = localStorage.getItem(KEY);
-    if (!startEpochMs) {
-      startEpochMs = String(Date.now());
-      localStorage.setItem(KEY, startEpochMs);
-    }
-
-    const startMs = Number(startEpochMs);
+    const startMs = new Date(START_ISO_LOCAL).getTime();
+    const statusEl = document.getElementById("status");
 
     function tick() {
-      const elapsedSeconds = Math.floor((Date.now() - startMs) / 1000);
+      const nowMs = Date.now();
+
+      if (Number.isNaN(startMs)) {
+        statusEl.textContent = "Data de start este invalidă. Verifică START_ISO_LOCAL.";
+        return;
+      }
+
+      // Înainte de start: nu scădem încă (rămâne 1000 zile)
+      const elapsedSeconds = Math.floor(Math.max(0, nowMs - startMs) / 1000);
 
       let remaining = totalStartSeconds - elapsedSeconds;
       if (remaining < 0) remaining = 0;
@@ -125,6 +136,15 @@
       document.getElementById("hours").textContent = String(hours).padStart(2, "0");
       document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
       document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+
+      if (nowMs < startMs) {
+        // Mesaj până începe countdown-ul
+        statusEl.textContent = "Countdown-ul începe la: " + START_ISO_LOCAL;
+      } else if (remaining === 0) {
+        statusEl.textContent = "Countdown finalizat.";
+      } else {
+        statusEl.textContent = "";
+      }
     }
 
     tick();
