@@ -92,27 +92,28 @@
   </main>
 
   <script>
-    // Contor de la momentul încărcării paginii:
-    const start = new Date();
+  // Countdown de la 1000 zile:
+  const totalStartSeconds = 1000 * 24 * 60 * 60; // 1000 zile în secunde
+  const start = new Date();
 
-    function tick() {
-      const now = new Date();
-      let diffMs = now - start;
-      if (diffMs < 0) diffMs = 0;
+  function tick() {
+    const now = new Date();
+    const elapsedSeconds = Math.floor((now - start) / 1000);
 
-      const totalSeconds = Math.floor(diffMs / 1000);
+    let remaining = totalStartSeconds - elapsedSeconds;
+    if (remaining < 0) remaining = 0;
 
-      const days = Math.floor(totalSeconds / 86400);
-      const minutes = Math.floor((totalSeconds % 86400) / 60);
-      const seconds = totalSeconds % 60;
+    const days = Math.floor(remaining / 86400);
+    const minutes = Math.floor((remaining % 86400) / 60);
+    const seconds = remaining % 60;
 
-      document.getElementById("days").textContent = String(days);
-      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
-      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
-    }
+    document.getElementById("days").textContent = String(days);
+    document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+  }
 
-    tick();
-    setInterval(tick, 1000);
-  </script>
+  tick();
+  setInterval(tick, 1000);
+</script>
 </body>
 </html>
