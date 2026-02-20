@@ -27,7 +27,7 @@
     img.hero {
       width: 100%;
       max-width: 1024px;
-      max-height: 50vh;   /* schimbă 50vh -> 60vh / 40vh după gust */
+      max-height: 50vh; /* schimbă 50vh -> 60vh / 40vh după gust */
       height: auto;
       object-fit: contain;
       display: block;
@@ -93,17 +93,25 @@
   </main>
 
   <script>
-    // Countdown de la 1000 zile:
-    // 1 zi = 24 * 60 * 60 = 86400 secunde
-    // 1000 zile = 1000 * 86400 = 86,400,000 secunde
+    // Countdown persistent de la 1000 zile (se salvează în browser).
+    // 1 zi = 24*60*60 = 86400 secunde
+    // 1000 zile = 1000*86400 = 86,400,000 secunde
     const totalStartSeconds = 1000 * 24 * 60 * 60;
 
-    // Pornim countdown-ul din momentul încărcării paginii:
-    const start = new Date();
+    // Cheie unică pentru site-ul tău:
+    const KEY = "countdown_start_epoch_ms_v1";
+
+    // Dacă nu există un start salvat, îl setăm acum:
+    let startEpochMs = localStorage.getItem(KEY);
+    if (!startEpochMs) {
+      startEpochMs = String(Date.now());
+      localStorage.setItem(KEY, startEpochMs);
+    }
+
+    const startMs = Number(startEpochMs);
 
     function tick() {
-      const now = new Date();
-      const elapsedSeconds = Math.floor((now - start) / 1000);
+      const elapsedSeconds = Math.floor((Date.now() - startMs) / 1000);
 
       let remaining = totalStartSeconds - elapsedSeconds;
       if (remaining < 0) remaining = 0;
