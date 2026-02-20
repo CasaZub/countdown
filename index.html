@@ -27,7 +27,7 @@
     img.hero {
       width: 100%;
       max-width: 1024px;
-      max-height: 50vh; /* schimbă 50vh -> 60vh / 40vh după gust */
+      max-height: 50vh;
       height: auto;
       object-fit: contain;
       display: block;
@@ -35,53 +35,38 @@
       border-radius: 18px;
     }
 
-    /* Default: mobil = vertical */
+    /* DEFAULT (desktop / ecrane mai mari): orizontal */
     .timer {
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.5px;
       display: flex;
-      flex-direction: column;   /* vertical */
+      flex-direction: row;          /* orizontal */
+      justify-content: center;
       align-items: stretch;
       gap: 12px;
-      width: min(360px, 92vw);  /* să arate bine pe mobil */
-      margin: 0 auto;
+      flex-wrap: wrap;
     }
 
     .box {
       padding: 14px 16px;
       border: 1px solid rgba(127,127,127,0.35);
       border-radius: 16px;
+      min-width: 120px;
     }
 
-    .num {
-      font-size: 42px;
-      font-weight: 800;
-      line-height: 1.05;
-    }
+    .num { font-size: 42px; font-weight: 800; line-height: 1.05; }
+    .lbl { opacity: 0.8; font-size: 14px; margin-top: 6px; }
+    .note { opacity: 0.75; font-size: 13px; margin-top: 6px; }
 
-    .lbl {
-      opacity: 0.8;
-      font-size: 14px;
-      margin-top: 6px;
-    }
-
-    .note {
-      opacity: 0.75;
-      font-size: 13px;
-      margin-top: 6px;
-    }
-
-    /* Desktop: revine pe orizontal */
-    @media (min-width: 700px) {
+    /* MOBIL: vertical (sub 700px) */
+    @media (max-width: 699px) {
       .timer {
-        flex-direction: row;
-        justify-content: center;
-        align-items: stretch;
-        width: auto;
-        flex-wrap: wrap;
+        flex-direction: column;     /* vertical */
+        width: min(360px, 92vw);
+        margin: 0 auto;
       }
       .box {
-        min-width: 120px;
+        min-width: 0;              /* să nu forțeze lățimi */
       }
     }
   </style>
@@ -118,11 +103,8 @@
 
   <script>
     // ===================== SETĂRI (TU MODIFICI AICI) =====================
-    const totalStartSeconds = 1000 * 24 * 60 * 60; // 1000 zile
-
-    // Data/oră de START a countdown-ului (ora locală):
-    // Format: YYYY-MM-DDTHH:MM:SS
-    const START_ISO_LOCAL = "2026-02-20T09:55:00";
+    const totalStartSeconds = 1000 * 24 * 60 * 60; // 1000 zile = 86,400,000 secunde
+    const START_ISO_LOCAL = "2026-02-20T12:00:00"; // YYYY-MM-DDTHH:MM:SS (ora locală)
     // ====================================================================
 
     const startMs = new Date(START_ISO_LOCAL).getTime();
@@ -151,13 +133,9 @@
       document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
       document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 
-      if (nowMs < startMs) {
-        statusEl.textContent = "Countdown-ul începe la: " + START_ISO_LOCAL;
-      } else if (remaining === 0) {
-        statusEl.textContent = "Countdown finalizat.";
-      } else {
-        statusEl.textContent = "";
-      }
+      if (nowMs < startMs) statusEl.textContent = "Countdown-ul începe la: " + START_ISO_LOCAL;
+      else if (remaining === 0) statusEl.textContent = "Countdown finalizat.";
+      else statusEl.textContent = "";
     }
 
     tick();
