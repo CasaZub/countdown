@@ -35,20 +35,22 @@
       border-radius: 18px;
     }
 
+    /* Default: mobil = vertical */
     .timer {
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.5px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;   /* vertical */
+      align-items: stretch;
       gap: 12px;
-      flex-wrap: wrap;
+      width: min(360px, 92vw);  /* să arate bine pe mobil */
+      margin: 0 auto;
     }
 
     .box {
       padding: 14px 16px;
       border: 1px solid rgba(127,127,127,0.35);
       border-radius: 16px;
-      min-width: 120px;
     }
 
     .num {
@@ -67,6 +69,20 @@
       opacity: 0.75;
       font-size: 13px;
       margin-top: 6px;
+    }
+
+    /* Desktop: revine pe orizontal */
+    @media (min-width: 700px) {
+      .timer {
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+        width: auto;
+        flex-wrap: wrap;
+      }
+      .box {
+        min-width: 120px;
+      }
     }
   </style>
 </head>
@@ -102,12 +118,11 @@
 
   <script>
     // ===================== SETĂRI (TU MODIFICI AICI) =====================
-    // Countdown de la 1000 zile:
-    const totalStartSeconds = 1000 * 24 * 60 * 60; // 86,400,000 secunde
+    const totalStartSeconds = 1000 * 24 * 60 * 60; // 1000 zile
 
     // Data/oră de START a countdown-ului (ora locală):
     // Format: YYYY-MM-DDTHH:MM:SS
-    const START_ISO_LOCAL = "2026-02-20T09:46:00";
+    const START_ISO_LOCAL = "2026-02-20T09:55:00";
     // ====================================================================
 
     const startMs = new Date(START_ISO_LOCAL).getTime();
@@ -121,7 +136,6 @@
         return;
       }
 
-      // Înainte de start: nu scădem încă (rămâne 1000 zile)
       const elapsedSeconds = Math.floor(Math.max(0, nowMs - startMs) / 1000);
 
       let remaining = totalStartSeconds - elapsedSeconds;
@@ -138,7 +152,6 @@
       document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 
       if (nowMs < startMs) {
-        // Mesaj până începe countdown-ul
         statusEl.textContent = "Countdown-ul începe la: " + START_ISO_LOCAL;
       } else if (remaining === 0) {
         statusEl.textContent = "Countdown finalizat.";
