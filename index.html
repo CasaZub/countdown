@@ -27,11 +27,8 @@
     img.hero {
       width: 100%;
       max-width: 1024px;
-
-      /* Control mărime pe ecran: */
       max-height: 50vh;   /* schimbă 50vh -> 60vh / 40vh după gust */
       height: auto;
-
       object-fit: contain;
       display: block;
       margin: 0 auto;
@@ -70,12 +67,11 @@
 
 <body>
   <main class="wrap">
-    <!-- Imaginea ta din repo: -->
     <img class="hero" src="hero.JPG" alt="Imagine" width="1024" height="1536" />
 
     <section class="timer" aria-label="Contor timp">
       <div class="box">
-        <div id="days" class="num">0</div>
+        <div id="days" class="num">1000</div>
         <div class="lbl">zile</div>
       </div>
 
@@ -92,28 +88,32 @@
   </main>
 
   <script>
-  // Countdown de la 1000 zile:
-  const totalStartSeconds = 1000 * 24 * 60 * 60; // 1000 zile în secunde
-  const start = new Date();
+    // Countdown de la 1000 zile:
+    // 1 zi = 24 * 60 * 60 = 86400 secunde
+    // 1000 zile = 1000 * 86400 = 86,400,000 secunde
+    const totalStartSeconds = 1000 * 24 * 60 * 60;
 
-  function tick() {
-    const now = new Date();
-    const elapsedSeconds = Math.floor((now - start) / 1000);
+    // Pornim countdown-ul din momentul încărcării paginii:
+    const start = new Date();
 
-    let remaining = totalStartSeconds - elapsedSeconds;
-    if (remaining < 0) remaining = 0;
+    function tick() {
+      const now = new Date();
+      const elapsedSeconds = Math.floor((now - start) / 1000);
 
-    const days = Math.floor(remaining / 86400);
-    const minutes = Math.floor((remaining % 86400) / 60);
-    const seconds = remaining % 60;
+      let remaining = totalStartSeconds - elapsedSeconds;
+      if (remaining < 0) remaining = 0;
 
-    document.getElementById("days").textContent = String(days);
-    document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
-    document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
-  }
+      const days = Math.floor(remaining / 86400);
+      const minutes = Math.floor((remaining % 86400) / 60);
+      const seconds = remaining % 60;
 
-  tick();
-  setInterval(tick, 1000);
-</script>
+      document.getElementById("days").textContent = String(days);
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
 </body>
 </html>
