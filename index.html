@@ -76,6 +76,11 @@
       </div>
 
       <div class="box">
+        <div id="hours" class="num">00</div>
+        <div class="lbl">ore</div>
+      </div>
+
+      <div class="box">
         <div id="minutes" class="num">00</div>
         <div class="lbl">minute</div>
       </div>
@@ -104,10 +109,12 @@
       if (remaining < 0) remaining = 0;
 
       const days = Math.floor(remaining / 86400);
-      const minutes = Math.floor((remaining % 86400) / 60);
+      const hours = Math.floor((remaining % 86400) / 3600);
+      const minutes = Math.floor((remaining % 3600) / 60);
       const seconds = remaining % 60;
 
       document.getElementById("days").textContent = String(days);
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
       document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
       document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
     }
